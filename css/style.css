@@ -1,0 +1,601 @@
+/* =========================================================
+   DESIGN TOKENS
+   A quiet, dusk-lit palette — dark blue-charcoal night,
+   warm gold candle-light, muted forest green.
+   ========================================================= */
+:root {
+  --bg-deep:      #0B0F14;
+  --bg-deep-2:    #12181F;
+  --bg-vignette:  #060809;
+
+  --gold:         #D8A65C;
+  --gold-soft:    #E9C588;
+  --moss:         #4B6357;
+  --rose:         #C48770;
+
+  --ink:          #EFE8D8;
+  --ink-muted:    #A79C8B;
+  --ink-faint:    #6E6B63;
+
+  --font-display: 'Fraunces', 'Georgia', serif;
+  --font-body:    'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --ease-out:     cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out:  cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* =========================================================
+   RESET / BASE
+   ========================================================= */
+* { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg-deep);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-weight: 300;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body.is-locked {
+  overflow: hidden;
+  height: 100vh;
+}
+
+img { max-width: 100%; display: block; }
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: inherit;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+/* =========================================================
+   AMBIENT BACKGROUND — fireflies + grain, shared under whole page
+   ========================================================= */
+.ambient {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(75, 99, 87, 0.18), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 85% 100%, rgba(196, 135, 112, 0.10), transparent 55%),
+    linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-deep-2) 50%, var(--bg-vignette) 100%);
+}
+
+.ambient-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+.ambient-fireflies span,
+.gate-fireflies span {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--gold-soft);
+  box-shadow: 0 0 6px 2px rgba(233, 197, 136, 0.55);
+  opacity: 0;
+  animation: firefly-drift linear infinite;
+}
+
+@keyframes firefly-drift {
+  0%   { opacity: 0; transform: translate(0, 0) scale(0.6); }
+  10%  { opacity: 0.9; }
+  50%  { transform: translate(var(--fx, 30px), var(--fy, -60px)) scale(1); }
+  90%  { opacity: 0.7; }
+  100% { opacity: 0; transform: translate(var(--fx2, -20px), var(--fy2, -140px)) scale(0.6); }
+}
+
+/* =========================================================
+   GATE / LOADER
+   ========================================================= */
+.gate {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse 90% 70% at 50% 40%, #171F27 0%, var(--bg-deep) 55%, var(--bg-vignette) 100%);
+  transition: opacity 1.1s var(--ease-in-out), visibility 1.1s var(--ease-in-out);
+}
+
+.gate.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.gate-glow {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  width: 60vw;
+  height: 60vw;
+  max-width: 640px;
+  max-height: 640px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(216, 166, 92, 0.16), transparent 70%);
+  filter: blur(10px);
+}
+
+.gate-fireflies { position: absolute; inset: 0; overflow: hidden; }
+
+.gate-inner {
+  position: relative;
+  text-align: center;
+  padding: 0 24px;
+  max-width: 560px;
+}
+
+.gate-eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  letter-spacing: 0.28em;
+  color: var(--gold-soft);
+  margin: 0 0 18px;
+  text-transform: lowercase;
+}
+
+.gate-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(1.8rem, 5vw, 2.9rem);
+  line-height: 1.25;
+  color: var(--ink);
+  margin: 0 0 40px;
+}
+
+.gate-button {
+  position: relative;
+  padding: 16px 40px;
+  border: 1px solid rgba(216, 166, 92, 0.45);
+  border-radius: 999px;
+  color: var(--gold-soft);
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  transition: border-color 0.4s var(--ease-out), background 0.4s var(--ease-out), transform 0.4s var(--ease-out);
+}
+
+.gate-button:hover,
+.gate-button:focus-visible {
+  border-color: var(--gold-soft);
+  background: rgba(216, 166, 92, 0.08);
+  transform: translateY(-1px);
+}
+
+.gate-button:focus-visible { outline: 2px solid var(--gold-soft); outline-offset: 4px; }
+
+.gate-hint {
+  margin: 22px 0 0;
+  font-size: 0.78rem;
+  color: var(--ink-faint);
+  letter-spacing: 0.03em;
+}
+
+/* =========================================================
+   SOUND TOGGLE
+   ========================================================= */
+.sound-toggle {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 40;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid rgba(239, 232, 216, 0.18);
+  background: rgba(11, 15, 20, 0.55);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out), border-color 0.3s;
+}
+
+.sound-toggle.is-visible { opacity: 1; transform: translateY(0); }
+.sound-toggle:hover { border-color: rgba(216, 166, 92, 0.5); }
+
+.sound-toggle-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 16px;
+}
+
+.sound-toggle-bars i {
+  display: block;
+  width: 3px;
+  background: var(--gold-soft);
+  border-radius: 2px;
+  animation: bar-bounce 1.1s ease-in-out infinite;
+}
+.sound-toggle-bars i:nth-child(1) { height: 6px;  animation-delay: -0.2s; }
+.sound-toggle-bars i:nth-child(2) { height: 14px; animation-delay: -0.05s; }
+.sound-toggle-bars i:nth-child(3) { height: 9px;  animation-delay: -0.35s; }
+
+.sound-toggle.is-muted .sound-toggle-bars i { animation-play-state: paused; height: 3px !important; }
+
+@keyframes bar-bounce {
+  0%, 100% { height: 4px; }
+  50% { height: 15px; }
+}
+
+/* =========================================================
+   CONFETTI CANVAS (final screen only)
+   ========================================================= */
+.confetti-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.2s var(--ease-out);
+}
+.confetti-canvas.is-active { opacity: 1; }
+
+/* =========================================================
+   STORY LAYOUT
+   ========================================================= */
+.story {
+  position: relative;
+  z-index: 1;
+}
+
+.screen {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 24px;
+  overflow: hidden;
+}
+
+.screen-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 720px;
+  text-align: center;
+}
+
+.screen-inner--narrow { max-width: 560px; }
+
+.screen-inner--closing {
+  margin-top: 90px;
+}
+
+/* Reveal-on-scroll lines */
+.reveal-line {
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 3.4vw, 2.1rem);
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--ink);
+  margin: 0 0 26px;
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 1s var(--ease-out), transform 1s var(--ease-out);
+}
+
+.reveal-line:last-child { margin-bottom: 0; }
+
+.reveal-line.is-visible { opacity: 1; transform: translateY(0); }
+
+.reveal-line--soft {
+  font-family: var(--font-body);
+  font-size: clamp(0.98rem, 2vw, 1.15rem);
+  font-weight: 300;
+  color: var(--ink-muted);
+  line-height: 1.75;
+}
+
+.reveal-line--emphasis {
+  color: var(--gold-soft);
+  font-style: italic;
+}
+
+.screen--intro .reveal-line:first-child {
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  font-style: italic;
+}
+
+/* Scroll cue */
+.scroll-cue {
+  position: absolute;
+  bottom: 44px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  transition: opacity 1s var(--ease-out) 0.6s;
+}
+.scroll-cue.is-visible { opacity: 0.7; }
+
+.scroll-cue span {
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.scroll-cue-line {
+  width: 1px;
+  height: 34px;
+  background: linear-gradient(var(--gold-soft), transparent);
+  animation: scroll-cue-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes scroll-cue-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+/* =========================================================
+   MEMORY CARDS — choreographed photo entrances
+   ========================================================= */
+.memory-card {
+  position: relative;
+  z-index: 2;
+  margin: 64px auto 0;
+  width: min(78vw, 340px);
+  opacity: 0;
+  will-change: transform, opacity;
+  transition: opacity 1.1s var(--ease-out), transform 1.1s var(--ease-out);
+}
+
+.memory-card-frame {
+  background: var(--bg-deep-2);
+  padding: 14px 14px 34px;
+  border-radius: 3px;
+  box-shadow:
+    0 30px 60px -20px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(239, 232, 216, 0.06);
+}
+
+.memory-card-frame--small { width: 80%; margin: 0 auto; }
+
+.memory-card-frame img {
+  width: 100%;
+  border-radius: 1px;
+  filter: saturate(0.92) contrast(1.02);
+}
+
+/* Choreography: a small set of reusable entrance directions + settle
+   rotations, cycled across however many photos a screen holds, so every
+   card still gets a deliberate, distinct movement rather than a repeat
+   of its neighbour. */
+.card-var-a { transform: translateX(-70px) rotate(-9deg) scale(0.94); }
+.card-var-a.is-visible { opacity: 1; transform: translateX(0) rotate(-3deg) scale(1); }
+
+.card-var-b { transform: translateY(90px) rotate(6deg) scale(0.94); }
+.card-var-b.is-visible { opacity: 1; transform: translateY(0) rotate(2deg) scale(1); }
+
+.card-var-c { transform: translateX(70px) rotate(7deg) scale(0.94); }
+.card-var-c.is-visible { opacity: 1; transform: translateX(0) rotate(-2deg) scale(1); }
+
+.card-var-d { transform: scale(0.8); }
+.card-var-d.is-visible { opacity: 1; transform: scale(1) rotate(3deg); }
+
+.card-var-e { transform: translate(-50px, 60px) rotate(-6deg) scale(0.92); }
+.card-var-e.is-visible { opacity: 1; transform: translate(0, 0) rotate(-1.5deg) scale(1); }
+
+.card-var-f { transform: translate(50px, 60px) rotate(6deg) scale(0.92); }
+.card-var-f.is-visible { opacity: 1; transform: translate(0, 0) rotate(2deg) scale(1); }
+
+.memory-card:hover .memory-card-frame,
+.memory-card:focus-within .memory-card-frame {
+  transition: transform 0.5s var(--ease-out);
+}
+.memory-card:hover .memory-card-frame { transform: translateY(-4px); }
+
+/* Gentle idle sway once visible (paused for reduced motion) */
+.memory-card.is-visible {
+  animation: card-sway 7s ease-in-out infinite;
+}
+.memory-card:nth-of-type(3n).is-visible  { animation-delay: -1.2s; }
+.memory-card:nth-of-type(3n+1).is-visible { animation-delay: -3.6s; }
+.memory-card:nth-of-type(3n+2).is-visible { animation-delay: -5.4s; }
+
+@keyframes card-sway {
+  0%, 100% { margin-top: 64px; }
+  50% { margin-top: 74px; }
+}
+
+/* Smaller companion photo on the final screen, sits ahead of the main one */
+.memory-card--secondary {
+  width: min(56vw, 210px);
+  margin-top: 40px;
+  margin-bottom: -20px;
+}
+
+/* =========================================================
+   MEMORIES SCREEN — vertical rhythm of fragments + photos
+   ========================================================= */
+.screen--memories { padding-top: 90px; padding-bottom: 90px; }
+
+.memories-track {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.memory-fragment {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out);
+  margin: 28px 0;
+  text-align: center;
+}
+.memory-fragment.is-visible { opacity: 1; transform: translateY(0); }
+
+.memory-fragment-number {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(2.4rem, 7vw, 4rem);
+  color: var(--gold-soft);
+  opacity: 0.9;
+}
+
+.memory-fragment--text p {
+  font-family: var(--font-body);
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  color: var(--ink-muted);
+  max-width: 380px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* =========================================================
+   BIRTHDAY SCREEN
+   ========================================================= */
+.screen--birthday { padding-top: 100px; }
+
+.birthday-eyebrow {
+  font-size: 0.78rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 0 0 8px;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out);
+}
+.birthday-eyebrow.is-visible { opacity: 1; transform: translateY(0); }
+
+.birthday-name {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(3rem, 13vw, 6.5rem);
+  letter-spacing: 0.02em;
+  margin: 0;
+  background: linear-gradient(180deg, var(--gold-soft), var(--gold) 70%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  opacity: 0;
+  transform: translateY(24px) scale(0.96);
+  transition: opacity 1.2s var(--ease-out), transform 1.2s var(--ease-out);
+}
+.birthday-name.is-visible { opacity: 1; transform: translateY(0) scale(1); }
+
+.birthday-heart {
+  color: var(--rose);
+  font-size: 1.4rem;
+  margin: 10px 0 42px;
+  opacity: 0;
+  transition: opacity 1s var(--ease-out) 0.3s;
+}
+.birthday-heart.is-visible { opacity: 0.85; }
+
+.closing-line {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.1rem, 2.6vw, 1.5rem);
+  color: var(--ink-muted);
+  margin: 0 0 14px;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out);
+}
+.closing-line.is-visible { opacity: 1; transform: translateY(0); }
+.closing-line--emphasis { color: var(--gold-soft); font-size: clamp(1.2rem, 3vw, 1.7rem); }
+
+.signature {
+  margin-top: 100px;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 1s var(--ease-out);
+}
+.signature.is-visible { opacity: 1; }
+
+.signature p {
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+  margin: 0 0 18px;
+}
+
+.replay-button {
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  padding: 10px 22px;
+  border: 1px solid rgba(239, 232, 216, 0.14);
+  border-radius: 999px;
+  transition: color 0.3s, border-color 0.3s;
+}
+.replay-button:hover,
+.replay-button:focus-visible {
+  color: var(--gold-soft);
+  border-color: rgba(216, 166, 92, 0.5);
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 640px) {
+  .screen { padding: 90px 20px; }
+  .memory-card { width: min(84vw, 300px); margin-top: 48px; }
+  .screen-inner--closing { margin-top: 60px; }
+  .signature { margin-top: 70px; }
+  .sound-toggle { bottom: 18px; right: 18px; }
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  .reveal-line,
+  .memory-card,
+  .memory-fragment,
+  .birthday-name,
+  .birthday-eyebrow,
+  .birthday-heart,
+  .closing-line,
+  .signature,
+  .scroll-cue,
+  .sound-toggle {
+    transition-duration: 0.01ms !important;
+  }
+
+  .memory-card.is-visible { animation: none !important; }
+  .ambient-fireflies span,
+  .gate-fireflies span { animation: none !important; opacity: 0.5; }
+  .scroll-cue-line { animation: none !important; }
+  .sound-toggle-bars i { animation: none !important; }
+}

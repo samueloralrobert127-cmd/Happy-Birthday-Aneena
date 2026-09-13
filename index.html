@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Happy Birthday, Aneena</title>
+<meta name="description" content="A small digital memory for Aneena.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ============ LOADER / GATE ============ -->
+<div class="gate" id="gate">
+  <div class="gate-glow"></div>
+  <div class="gate-fireflies" id="gateFireflies" aria-hidden="true"></div>
+  <div class="gate-inner">
+    <p class="gate-eyebrow">for Aneena</p>
+    <h1 class="gate-title">A small memory,<br>waiting for you.</h1>
+    <button class="gate-button" id="startButton" type="button">
+      <span>Open it</span>
+    </button>
+    <p class="gate-hint">best with sound &amp; a minute to spare</p>
+  </div>
+</div>
+
+<!-- ============ AMBIENT BACKGROUND (fireflies / grain) ============ -->
+<div class="ambient" id="ambient" aria-hidden="true">
+  <div class="ambient-fireflies" id="ambientFireflies"></div>
+  <div class="ambient-grain"></div>
+</div>
+
+<!-- ============ AUDIO ============ -->
+<audio id="bgAudio" src="assets/audio/music.mp3" loop preload="auto"></audio>
+<button class="sound-toggle" id="soundToggle" type="button" aria-label="Toggle music" aria-pressed="true">
+  <span class="sound-toggle-bars" aria-hidden="true">
+    <i></i><i></i><i></i>
+  </span>
+</button>
+
+<!-- ============ CANVAS FOR FINAL CONFETTI ============ -->
+<canvas id="confettiCanvas" class="confetti-canvas" aria-hidden="true"></canvas>
+
+<!-- ============ MAIN EXPERIENCE ============ -->
+<main class="story" id="story">
+
+  <!-- SCREEN 1 — INTRO -->
+  <section class="screen screen--intro" data-screen="1">
+    <div class="screen-inner">
+      <p class="reveal-line" data-reveal>Hey, Aneena&hellip;</p>
+      <p class="reveal-line reveal-line--soft" data-reveal>
+        There's a particular kind of person you don't need daily conversations with
+        to know they still matter.
+      </p>
+    </div>
+    <div class="scroll-cue" data-reveal-delay>
+      <span>scroll</span>
+      <div class="scroll-cue-line"></div>
+    </div>
+  </section>
+
+  <!-- SCREEN 2 — THE SCHOOL YEARS -->
+  <section class="screen screen--school" data-screen="2">
+    <div class="screen-inner">
+      <p class="reveal-line" data-reveal>
+        Somewhere in the middle of 11th and 12th grade, I got lucky enough
+        to end up as your friend.
+      </p>
+      <p class="reveal-line reveal-line--soft" data-reveal>Two years. That's really all it took.</p>
+    </div>
+
+    <figure class="memory-card card-var-a" data-photo="12">
+      <div class="memory-card-frame">
+        <img src="assets/images/aneena-12.jpg" alt="Aneena laughing, glasses on, mid school year" loading="lazy">
+      </div>
+    </figure>
+  </section>
+
+  <!-- SCREEN 3 — MEMORIES -->
+  <section class="screen screen--memories" data-screen="3">
+    <div class="memories-track">
+
+      <div class="memory-fragment" data-reveal>
+        <span class="memory-fragment-number">11th.</span>
+      </div>
+
+      <figure class="memory-card card-var-b" data-photo="6">
+        <div class="memory-card-frame">
+          <img src="assets/images/aneena-06.jpg" alt="Aneena on a road trip, with a dog for company" loading="lazy">
+        </div>
+      </figure>
+
+      <div class="memory-fragment memory-fragment--text" data-reveal>
+        <p>Little things that stuck, for no particular reason.</p>
+      </div>
+
+      <figure class="memory-card card-var-c" data-photo="1">
+        <div class="memory-card-frame">
+          <img src="assets/images/aneena-01.jpg" alt="Aneena, a candid mirror photo" loading="lazy">
+        </div>
+      </figure>
+
+      <figure class="memory-card card-var-d" data-photo="2">
+        <div class="memory-card-frame">
+          <img src="assets/images/aneena-02.jpg" alt="Aneena blowing a dandelion" loading="lazy">
+        </div>
+      </figure>
+
+      <div class="memory-fragment" data-reveal>
+        <span class="memory-fragment-number">12th.</span>
+      </div>
+
+      <figure class="memory-card card-var-e" data-photo="3">
+        <div class="memory-card-frame">
+          <img src="assets/images/aneena-03.jpg" alt="Aneena sitting on a path, smiling" loading="lazy">
+        </div>
+      </figure>
+
+      <div class="memory-fragment memory-fragment--text" data-reveal>
+        <p>Random days that somehow turned into memories.</p>
+      </div>
+
+      <figure class="memory-card card-var-f" data-photo="4">
+        <div class="memory-card-frame memory-card-frame--small">
+          <img src="assets/images/aneena-04.jpg" alt="Aneena resting her chin, close-up" loading="lazy">
+        </div>
+      </figure>
+
+      <figure class="memory-card card-var-a" data-photo="5">
+        <div class="memory-card-frame memory-card-frame--small">
+          <img src="assets/images/aneena-05.jpg" alt="Aneena, a close-up detail shot" loading="lazy">
+        </div>
+      </figure>
+
+      <div class="memory-fragment memory-fragment--text" data-reveal>
+        <p>Things you taught me without really meaning to.</p>
+      </div>
+
+      <figure class="memory-card card-var-b" data-photo="7">
+        <div class="memory-card-frame">
+          <img src="assets/images/aneena-07.jpg" alt="Aneena smiling, a playful selfie" loading="lazy">
+        </div>
+      </figure>
+
+      <figure class="memory-card card-var-c" data-photo="9">
+        <div class="memory-card-frame memory-card-frame--small">
+          <img src="assets/images/aneena-09.jpg" alt="Aneena with small flowers, close-up" loading="lazy">
+        </div>
+      </figure>
+
+      <div class="memory-fragment memory-fragment--text" data-reveal>
+        <p>Things I probably never said out loud.</p>
+      </div>
+
+      <figure class="memory-card card-var-d" data-photo="11">
+        <div class="memory-card-frame">
+          <img src="assets/images/aneena-11.jpg" alt="Aneena out at a night market" loading="lazy">
+        </div>
+      </figure>
+
+      <figure class="memory-card card-var-e" data-photo="13">
+        <div class="memory-card-frame">
+          <img src="assets/images/aneena-13.jpg" alt="Aneena volunteering outdoors, holding a net" loading="lazy">
+        </div>
+      </figure>
+
+    </div>
+  </section>
+
+  <!-- SCREEN 4 — WHAT I NEVER REALLY SAID -->
+  <section class="screen screen--said" data-screen="4">
+    <div class="screen-inner screen-inner--narrow">
+      <p class="reveal-line" data-reveal>You taught me more than you probably realize.</p>
+      <p class="reveal-line" data-reveal>Patience. Perspective. How to actually listen.</p>
+      <p class="reveal-line reveal-line--soft" data-reveal>I don't know if I ever properly said that.</p>
+      <p class="reveal-line reveal-line--soft" data-reveal>
+        We don't talk every day anymore. Life got busy, the way it quietly does.
+      </p>
+      <p class="reveal-line" data-reveal>
+        But that's never really changed how much you matter.
+      </p>
+      <p class="reveal-line" data-reveal>
+        Some friendships don't run on daily conversation. They just&nbsp;stay.
+      </p>
+      <p class="reveal-line reveal-line--emphasis" data-reveal>
+        You're one of the best people I've met. That hasn't changed either.
+      </p>
+    </div>
+  </section>
+
+  <!-- SCREEN 5 — HER BIRTHDAY -->
+  <section class="screen screen--birthday" data-screen="5">
+    <div class="screen-inner">
+      <p class="birthday-eyebrow" data-reveal>happy birthday</p>
+      <h2 class="birthday-name" data-reveal>ANEENA</h2>
+      <p class="birthday-heart" data-reveal>&#10084;</p>
+
+      <p class="reveal-line" data-reveal>I'm really glad school brought you into my life.</p>
+      <p class="reveal-line reveal-line--soft" data-reveal>
+        Here's to everything you've already become, everything you're becoming,
+        and all the good still waiting for you.
+      </p>
+    </div>
+
+    <figure class="memory-card card-var-f memory-card--secondary" data-photo="8">
+      <div class="memory-card-frame memory-card-frame--small">
+        <img src="assets/images/aneena-08.jpg" alt="Aneena on a trip, standing in front of the Universal globe" loading="lazy">
+      </div>
+    </figure>
+
+    <figure class="memory-card card-var-a" data-photo="10">
+      <div class="memory-card-frame">
+        <img src="assets/images/aneena-10.jpg" alt="Aneena smiling in the sun, bubbles floating by" loading="lazy">
+      </div>
+    </figure>
+
+    <div class="screen-inner screen-inner--closing">
+      <p class="closing-line" data-reveal>Some people are only part of a chapter.</p>
+      <p class="closing-line" data-reveal>Some become part of the story.</p>
+      <p class="closing-line closing-line--emphasis" data-reveal>I'm really glad you're part of mine.</p>
+    </div>
+
+    <div class="signature" data-reveal>
+      <p>Made with a lot of memories.</p>
+      <button class="replay-button" id="replayButton" type="button">replay</button>
+    </div>
+  </section>
+
+</main>
+
+<script src="js/main.js"></script>
+</body>
+</html>
